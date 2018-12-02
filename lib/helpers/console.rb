@@ -18,7 +18,7 @@ module Console
     end
   end
 
-  def self.read_int
-    read.to_i
+  def self.read_int(prefix = '> ')
+    read(prefix).to_i
   end
 end

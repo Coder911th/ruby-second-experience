@@ -3,6 +3,7 @@ require 'English'
 require_relative 'helpers/constants'
 require_relative 'helpers/validators'
 require_relative 'base_menu/selection_menu'
+require_relative 'base_menu/list_menu'
 require_relative 'types/record'
 
 class Core
@@ -12,9 +13,9 @@ class Core
 
   def run
     main_menu = SelectionMenu.new('Записная книжка')
-    main_menu.add('Добавить запись', -> { show_add_new_item_menu })
-    main_menu.add('Удалить запись', -> { 0 })
-    main_menu.add('Редактировать запись', -> { 0 })
+    main_menu.add('Добавить запись', -> { show_add_new_record_menu })
+    main_menu.add('Удалить запись', -> { show_remove_record_menu })
+    main_menu.add('Редактировать запись', -> { show_edit_record_menu })
     main_menu.add('Создать событие', -> { 0 })
     main_menu.add('Просмотреть все записи', -> { 0 })
     main_menu.add('Выход', -> { :stop })
@@ -53,12 +54,12 @@ class Core
     gets
   end
 
-  def show_add_new_item_menu
+  def show_add_new_record_menu
     params = []
     Console.clear
     puts 'Добавление новой записи'
-    params << Console.read('Фамилия: ', Validators::ONE_WORD)
-    params << Console.read('Имя: ', Validators::ONE_WORD)
+    params << Console.read('Фамилия: ', Validators::REQUIRED_ONE_WORD)
+    params << Console.read('Имя: ', Validators::REQUIRED_ONE_WORD)
     params << Console.read('Отчество: ', Validators::ONE_WORD)
     params << Console.read('Сотовый телефон: ')
     params << Console.read('Домашний телефон: ')
@@ -67,5 +68,21 @@ class Core
     @record_set.append(Record.new(*params))
     save_database
     show_waiting_menu('Запись успешно добавлена!')
+  end
+
+  def show_remove_record_menu
+    remove_menu = ListMenu.new(
+      'Записная книга',
+      'Введите номер записи, которую хотите удалить: ',
+      ->(record) { record.to_s }
+    )
+    @record_set.each { |record| remove_menu.add(record) }
+    target = remove_menu.run
+    @record_set.delete_if { |record| record == target }
+    save_database
+    show_waiting_menu('Запись успешно удалена!')
+  end
+
+  def show_edit_record_menu
   end
 end

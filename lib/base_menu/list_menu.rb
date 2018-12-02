@@ -1,8 +1,8 @@
 require_relative 'selection_menu'
 
 class ListMenu < SelectionMenu
-  def initialize(header_text, line_render)
-    super.initialize(header_text)
+  def initialize(header_text, before_input_text, line_render)
+    super(header_text, before_input_text, ->(index) { "№#{index}\r\n" })
     @line_render = line_render
   end
 
