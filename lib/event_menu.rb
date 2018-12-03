@@ -10,8 +10,7 @@ class EventMenu
   end
 
   def run
-    Console.clear
-    return Menu.show_waiting('В записной книжке ни одного знакомого!') if @record_set.size.zero?
+    return if !Menu.check_empty_notebook(@record_set)
 
     show_create_event_menu
   end

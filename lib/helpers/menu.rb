@@ -26,4 +26,13 @@ module Menu
     puts 'Чтобы продолжить нажмите ENTER...'
     gets
   end
+
+  def self.check_empty_notebook(record_set)
+    if record_set.size.zero?
+      Console.clear
+      Menu.show_waiting('В записной книжке ни одного знакомого!')
+      return false
+    end
+    true
+  end
 end

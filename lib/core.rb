@@ -20,6 +20,8 @@ class Core
     main_menu.add('Редактировать запись', -> { show_edit_record_menu })
     main_menu.add('Создать событие', -> { EventMenu.new(@record_set.clone).run })
     main_menu.add('Просмотреть все записи', lambda do
+      return if !Menu.check_empty_notebook(@record_set)
+
       Menu.show_list(@record_set)
       Menu.show_waiting
     end)
@@ -70,12 +72,16 @@ class Core
   end
 
   def show_remove_record_menu
+    return if !Menu.check_empty_notebook(@record_set)
+
     target = Menu.show_list(@record_set, 'Введите номер записи, которую хотите удалить: ')
     @record_set.delete_if { |record| record == target }
     save_database('Запись успешно удалена!')
   end
 
   def show_edit_record_menu
+    return if !Menu.check_empty_notebook(@record_set)
+
     target = Menu.show_list(@record_set, 'Введите номер записи, которую хотите отредактировать: ')
     menu = SelectionMenu.new(title: 'Выберите то, что хотите отредактировать:')
     menu.add('Адрес', -> { edit_record(target, :address) })
