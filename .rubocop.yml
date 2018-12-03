@@ -8,3 +8,5 @@ Style/NegatedIf: # Не форсировать unless
   Enabled: false
 Style/Documentation:
   Enabled: false
+Metrics/BlockLength:
+  ExcludedMethods: ['describe']

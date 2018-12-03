@@ -9,7 +9,7 @@ module Console
 
   def self.read(prefix = '> ', validator = nil)
     loop do
-      print prefix
+      STDOUT.print prefix
       raise StopInput if !input = $stdin.gets
 
       input = input.strip

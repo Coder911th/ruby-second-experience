@@ -24,7 +24,7 @@ module Menu
   def self.show_waiting(message = nil)
     puts message if message
     puts 'Чтобы продолжить нажмите ENTER...'
-    gets
+    $stdin.gets
   end
 
   def self.check_empty_notebook(record_set)
