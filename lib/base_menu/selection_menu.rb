@@ -3,9 +3,9 @@ require_relative '../helpers/console'
 class SelectionMenu
   def initialize(hash)
     @title = hash[:title]
-    @disable_selection = !hash[:disable_selection].nil?
+    @disable_selection = hash[:disable_selection] == true
     @input_message = hash[:input_message] || '> '
-    @autoclear = hash[:autoclear].nil?
+    @autoclear = hash[:autoclear] != false
     @index_template = hash[:index_template] || ->(index) { "#{index}) " }
     @items = []
   end

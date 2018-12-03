@@ -4,7 +4,7 @@ Record = Struct.new(:first_name, :second_name, :patronymic, :mobile, :phone, :ad
   end
 
   def address?
-    address.empty?
+    !address.empty?
   end
 
   def to_s
