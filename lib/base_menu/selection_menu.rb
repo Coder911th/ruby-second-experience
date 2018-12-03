@@ -1,9 +1,12 @@
 require_relative '../helpers/console'
 
 class SelectionMenu
-  def initialize(header_text = nil, before_input_text = '> ')
-    @header_text = header_text
-    @before_input_text = before_input_text
+  def initialize(hash)
+    @title = hash[:title]
+    @disable_selection = !hash[:disable_selection].nil?
+    @input_message = hash[:input_message] || '> '
+    @autoclear = hash[:autoclear].nil?
+    @index_template = hash[:index_template] || ->(index) { "#{index}) " }
     @items = []
   end
 
@@ -17,17 +20,17 @@ class SelectionMenu
   end
 
   def run
-    Console.clear
-    puts @header_text if @header_text
+    Console.clear if @autoclear
+    puts @title if @title
     @items.each_with_index do |item, index|
-      puts "#{index_template(index + 1)}#{item[:description]}"
+      puts "#{@index_template.call(index + 1)}#{item[:description]}"
     end
-    return if !@before_input_text
+    return if @disable_selection
 
     choise = 0
     available_input = (1..@items.size)
     loop do
-      break if available_input.cover?(choise = Console.read_int(@before_input_text))
+      break if available_input.cover?(choise = Console.read_int(@input_message))
 
       puts "Введите число из диапазона [#{available_input}]"
     end
@@ -38,11 +41,5 @@ class SelectionMenu
     until run == :stop; end
   rescue Console::StopInput
     infinite_run
-  end
-
-  private
-
-  def index_template(index)
-    "#{index}) "
   end
 end

@@ -1,10 +1,11 @@
 require_relative 'selection_menu'
 
 class ListMenu < SelectionMenu
-  def initialize(header_text, before_input_text, line_render, sorting = nil)
-    super(header_text, before_input_text)
-    @line_render = line_render
-    @sorting = sorting
+  def initialize(hash)
+    hash[:index_template] = hash[:index_template] || ->(index) { "№#{index}\r\n" }
+    super(hash)
+    @line_render = hash[:line_render] || ->(item) { item.to_s }
+    @sorting = hash[:sorting]
   end
 
   def add(item)
@@ -24,7 +25,5 @@ class ListMenu < SelectionMenu
 
   private
 
-  def index_template(index)
-    "№#{index}\r\n"
-  end
+  def index_template(index); end
 end

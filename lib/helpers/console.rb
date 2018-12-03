@@ -1,3 +1,5 @@
+require_relative 'validators'
+
 module Console
   class StopInput < RuntimeError; end
 
@@ -22,5 +24,9 @@ module Console
 
   def self.read_int(prefix = '> ')
     read(prefix).to_i
+  end
+
+  def self.read_yes_no(prefix = '> ')
+    read(prefix, Validators::ANSWER) == 'y'
   end
 end

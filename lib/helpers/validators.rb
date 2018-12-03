@@ -7,4 +7,5 @@ module Validators
 
     NOT_EMPTY.call(value)
   end
+  ANSWER = ->(value) { %w[y n].include?(value) ? true : "Введите либо 'y', либо 'n'" }
 end
