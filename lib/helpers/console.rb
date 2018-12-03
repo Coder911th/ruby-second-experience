@@ -1,4 +1,6 @@
 module Console
+  class StopInput < RuntimeError; end
+
   def self.clear
     system('clear') || system('cls')
   end
@@ -6,7 +8,7 @@ module Console
   def self.read(prefix = '> ', validator = nil)
     loop do
       print prefix
-      exit 0 if !input = $stdin.gets
+      raise StopInput if !input = $stdin.gets
 
       input = input.strip
       break input if !validator

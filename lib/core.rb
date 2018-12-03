@@ -17,7 +17,9 @@ class Core
     main_menu.add('Удалить запись', -> { show_remove_record_menu })
     main_menu.add('Редактировать запись', -> { show_edit_record_menu })
     main_menu.add('Создать событие', -> { 0 })
-    main_menu.add('Просмотреть все записи', -> { 0 })
+    main_menu.add('Просмотреть все записи', lambda do
+      choice_sorting_type_menu { |sorting| show_list(@record_set, sorting) }
+    end)
     main_menu.add('Выход', -> { :stop })
     main_menu.infinite_run
   end
@@ -70,19 +72,47 @@ class Core
     show_waiting_menu('Запись успешно добавлена!')
   end
 
-  def show_remove_record_menu
-    remove_menu = ListMenu.new(
-      'Записная книга',
-      'Введите номер записи, которую хотите удалить: ',
-      ->(record) { record.to_s }
+  def choice_sorting_type_menu
+    menu = SelectionMenu.new('Отсортировать все записи:')
+    menu.add('По фамилии', -> { yield(->(a, b) { a.second_name <=> b.second_name }) })
+    menu.add('По статусу', -> { yield(->(a, b) { a.status <=> b.status }) })
+    menu.run
+  end
+
+  def show_list(records, sorting, input_message, title = 'Записная книга')
+    menu = ListMenu.new(
+      title,
+      input_message,
+      ->(record) { record.to_s },
+      sorting
     )
-    @record_set.each { |record| remove_menu.add(record) }
-    target = remove_menu.run
-    @record_set.delete_if { |record| record == target }
-    save_database
-    show_waiting_menu('Запись успешно удалена!')
+    records.each { |record| menu.add(record) }
+    menu.run
+  end
+
+  def show_remove_record_menu
+    choice_sorting_type_menu do |sorting|
+      target = show_list(@record_set.clone, sorting, 'Введите номер записи, которую хотите удалить: ')
+      @record_set.delete_if { |record| record == target }
+      save_database
+      show_waiting_menu('Запись успешно удалена!')
+    end
   end
 
   def show_edit_record_menu
+    choice_sorting_type_menu do |sorting|
+      target = show_list(@record_set.clone, sorting, 'Введите номер записи, которую хотите отредактировать: ')
+      menu = SelectionMenu.new('Выберите то, что хотите отредактировать:')
+      menu.add('Адрес', -> { edit_record(target, :address) })
+      menu.add('Домашний телефон', -> { edit_record(target, :phone) })
+      menu.add('Мобильный телефон', -> { edit_record(target, :mobile) })
+      menu.run
+      save_database
+      show_waiting_menu('Запись успешно обновлена!')
+    end
+  end
+
+  def edit_record(record, field)
+    record[field] = Console.read('Введите новое значение: ')
   end
 end
