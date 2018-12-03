@@ -18,7 +18,8 @@ class Core
     main_menu.add('Редактировать запись', -> { show_edit_record_menu })
     main_menu.add('Создать событие', -> { 0 })
     main_menu.add('Просмотреть все записи', lambda do
-      choice_sorting_type_menu { |sorting| show_list(@record_set, sorting) }
+      choice_sorting_type_menu { |sorting| show_list(@record_set.clone, sorting) }
+      show_waiting_menu
     end)
     main_menu.add('Выход', -> { :stop })
     main_menu.infinite_run
@@ -79,7 +80,7 @@ class Core
     menu.run
   end
 
-  def show_list(records, sorting, input_message, title = 'Записная книга')
+  def show_list(records, sorting, input_message = nil, title = 'Записная книга')
     menu = ListMenu.new(
       title,
       input_message,

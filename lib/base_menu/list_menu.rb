@@ -16,10 +16,10 @@ class ListMenu < SelectionMenu
     new_item
   end
 
-  def run(blocking_selection = false)
+  def run
     @items.sort! { |a, b| @sorting.call(a[:on_selected].call, b[:on_selected].call) } if @sorting
 
-    super(blocking_selection)
+    super()
   end
 
   private

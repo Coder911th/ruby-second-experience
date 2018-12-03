@@ -16,13 +16,13 @@ class SelectionMenu
     new_item
   end
 
-  def run(blocking_selection = false)
+  def run
     Console.clear
     puts @header_text if @header_text
     @items.each_with_index do |item, index|
       puts "#{index_template(index + 1)}#{item[:description]}"
     end
-    return if blocking_selection
+    return if !@before_input_text
 
     choise = 0
     available_input = (1..@items.size)
