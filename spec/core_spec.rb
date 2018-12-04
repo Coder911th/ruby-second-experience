@@ -31,6 +31,7 @@ RSpec.describe Core do
 
   describe 'create event' do
     it 'valid creation' do
+      allow($stdout).to receive(:puts)
       expect($stdin).to receive(:gets).and_return('4')
       expect($stdin).to receive(:gets).and_return("Test Event #{rand}")
       expect($stdin).to receive(:gets).and_return('1')
@@ -44,6 +45,7 @@ RSpec.describe Core do
 
   describe 'edit menu' do
     it 'edit phone' do
+      allow($stdout).to receive(:puts)
       expect($stdin).to receive(:gets).and_return('3')
       expect($stdin).to receive(:gets).and_return('1')
       expect($stdin).to receive(:gets).and_return('1')
@@ -57,6 +59,7 @@ RSpec.describe Core do
 
   describe 'remove item' do
     it 'first' do
+      allow($stdout).to receive(:puts)
       expect($stdin).to receive(:gets).and_return('2')
       expect($stdin).to receive(:gets).and_return('1')
       expect($stdin).to receive(:gets).and_return('1')
